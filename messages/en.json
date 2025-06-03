@@ -1,0 +1,7 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+
+	"failed_image": "Failed to load image",
+	"loading_image": "Loading image",
+	"image": "Image"
+}
