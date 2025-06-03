@@ -8,7 +8,7 @@
 <Title name="STORIUM" />
 
 <div class="flex flex-wrap">
-	<LinkButton href="/arena">
+	<LinkButton href="/arena" className="blue-button">
 		⚔️ {m.arena()}</LinkButton
 	>
 </div>

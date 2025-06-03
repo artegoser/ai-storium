@@ -2,7 +2,6 @@
 	export let value: string = '';
 	export let readonly: boolean = false;
 	export let className: string = '';
-	export let resizable = false;
 
 	let inputElement: HTMLTextAreaElement;
 
@@ -60,7 +59,7 @@
 
 <textarea
 	bind:this={inputElement}
-	class="interactive {resizable ? '' : 'resize-none '}{className}"
+	class="interactive {className}"
 	bind:value
 	{readonly}
 	onkeydown={handleKeydown}

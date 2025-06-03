@@ -23,7 +23,7 @@
 	</button>
 
 	{#if opened}
-		<div class="pt-2" transition:slide>
+		<div class="flex flex-col gap-2 pt-2" transition:slide>
 			{@render children()}
 		</div>
 	{/if}

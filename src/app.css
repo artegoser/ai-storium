@@ -8,10 +8,25 @@ body {
 
 .button {
 	@apply rounded-2xl p-2 text-xl font-extrabold transition;
-	@apply bg-linear-to-t from-sky-500 to-indigo-500;
-	@apply hover:from-sky-600 hover:to-indigo-600;
 	@apply hover:scale-95 active:scale-90;
+}
+
+.blue-button {
+	@apply bg-linear-to-l from-sky-500 to-indigo-500;
+	@apply hover:from-sky-600 hover:to-indigo-600;
 	@apply active:from-sky-700 active:to-indigo-700;
+}
+
+.gray-button {
+	@apply bg-linear-to-l from-stone-500 to-zinc-500;
+	@apply hover:from-stone-600 hover:to-zinc-600;
+	@apply active:from-stone-700 active:to-zinc-700;
+}
+
+.red-button {
+	@apply bg-linear-to-l from-red-500 to-amber-500;
+	@apply hover:from-red-600 hover:to-amber-600;
+	@apply active:from-red-700 active:to-amber-700;
 }
 
 .spinner {
