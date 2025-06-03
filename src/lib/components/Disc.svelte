@@ -7,10 +7,10 @@
 		name,
 		class: c,
 		children,
-		closed: o = false
+		closed = false
 	}: { name: string; class?: string; closed?: boolean; children: Snippet } = $props();
 
-	let opened = $state(!o);
+	let opened = $state(true);
 </script>
 
 <div class="flex flex-col rounded-2xl border p-4{c ? ` ${c}` : ''}">
@@ -19,7 +19,7 @@
 			{name}
 		</h2>
 
-		<Arrow class="transition {opened ? 'rotate-90' : ''}" />
+		<Arrow class="transition {closed !== opened ? 'rotate-90' : ''}" />
 	</button>
 
 	{#if opened}

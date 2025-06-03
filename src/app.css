@@ -7,7 +7,7 @@ body {
 }
 
 .button {
-	@apply rounded-2xl p-2 text-xl font-extrabold transition;
+	@apply rounded-2xl p-2 text-lg font-extrabold transition;
 	@apply hover:scale-95 active:scale-90;
 }
 

@@ -1,6 +1,8 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 
+	"lang": "ENGLISH",
+
 	"failed_image": "Failed to load image",
 	"generating_image": "Generating image",
 	"image": "Image",
@@ -16,6 +18,7 @@
 	"place": "Place",
 
 	"generate": "Generate",
+	"generation_error": "Generation error",
 
 	"default_world": "A grounded, competitive realm where skill and strategy reign supreme. This world operates on clear physical laws and predictable cause-and-effect. Combat is treated as a revered tradition: honorable, intense, and driven by mastery. Energy hums with focused determination, where victory is earned through precision and adaptability. The atmosphere balances tension with respect, emphasizing growth and fair confrontation.",
 	"blood_world": "A savage, visceral dimension where brutality is the only language. Violence here is raw, primal, and glorified. The very air thrums with aggression, amplifying rage and pain into tangible forces. Rules are nonexistent; survival favors the merciless. Gore isn’t just common: it fuels the world’s dark energy, staining reality with a permanent metallic scent. Suffering is art, and spectators crave carnage.",

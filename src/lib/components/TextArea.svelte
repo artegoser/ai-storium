@@ -1,7 +1,8 @@
 <script lang="ts">
 	export let value: string = '';
-	export let readonly: boolean = false;
+	export let disabled: boolean = false;
 	export let className: string = '';
+	export let generating: boolean = false;
 
 	let inputElement: HTMLTextAreaElement;
 
@@ -59,8 +60,8 @@
 
 <textarea
 	bind:this={inputElement}
-	class="interactive {className}"
+	class="interactive {generating ? ' animate-pulse ' : ''}{className}"
 	bind:value
-	{readonly}
+	readonly={generating || disabled}
 	onkeydown={handleKeydown}
 ></textarea>
