@@ -48,6 +48,7 @@ Answer STRICTLY in this JSON format:
 {
 		"name": "Creative name, on ${m.lang()}",
 		"description": "Intriguing description, on ${m.lang()}",
+		"max_hp": max health in number (for human it is 100),
 		"visualPrompt": "Prompt for image generation ai, this MUST BE ON ENGLISH",
 		"abilities": [list of abilities (only short names) of character for use in battle, on ${m.lang()}]
 }
