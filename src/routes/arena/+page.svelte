@@ -108,7 +108,7 @@ Answer STRICTLY in this JSON format:
 		{#if !passed_setting}
 			<div class="flex flex-wrap gap-2">
 				<Button onclick={() => (world = m.default_world())} className="blue-button">
-					{m.default()}
+					{m.def()}
 				</Button>
 				<Button onclick={() => (world = m.blood_world())} className="red-button">
 					🩸 {m.blood_bath()}
