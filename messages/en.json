@@ -24,6 +24,8 @@
 	"description": "Description",
 
 	"generate": "Generate",
+	"generate_new": "Generate new",
+	"generate_from_text": "Generate from text",
 	"generation_error": "Generation error",
 
 	"default_world": "A grounded, competitive realm where skill and strategy reign supreme. This world operates on clear physical laws and predictable cause-and-effect. Combat is treated as a revered tradition: honorable, intense, and driven by mastery. Energy hums with focused determination, where victory is earned through precision and adaptability. The atmosphere balances tension with respect, emphasizing growth and fair confrontation.",

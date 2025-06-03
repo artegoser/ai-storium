@@ -20,7 +20,17 @@
 		world_generating = true;
 
 		world = await simplePrompt(
-			`You have to generate a description of the world where the battle takes place for the ai battle simulation game. The world can be anything. From dark fantasy to absolute memes and gags. For example: "${m.default_world()}".`
+			`You have to generate a technical description of the world where the battle takes place for the ai battle simulation game. do NOT write name of world. The world can be anything. From dark fantasy to absolute memes and gags. For example: "${m.default_world()}".`
+		);
+
+		world_generating = false;
+	}
+
+	async function generate_world_text() {
+		world_generating = true;
+
+		world = await simplePrompt(
+			`You have to generate a technical description of the world where the battle takes place for the ai battle simulation game. do NOT write name of world. Short description of world: ${world}`
 		);
 
 		world_generating = false;
@@ -30,7 +40,17 @@
 		place_generating = true;
 
 		place = await simplePrompt(
-			`You have to generate a description of the arena where the battle takes place for the ai battle simulation game. For example: "${m.colosseum_place()}". CONSIDER the description of the world: "${world}"`
+			`You have to generate a technical description of the arena where the battle takes place for the ai battle simulation game. do NOT write name of place. For example: "${m.colosseum_place()}". CONSIDER the description of the world: "${world}"`
+		);
+
+		place_generating = false;
+	}
+
+	async function generate_place_text() {
+		place_generating = true;
+
+		place = await simplePrompt(
+			`You have to generate a technical description of the arena where the battle takes place for the ai battle simulation game. do NOT write name of place. Short description of place: ${place}. CONSIDER the description of the world: "${world}"`
 		);
 
 		place_generating = false;
@@ -102,7 +122,10 @@ Answer STRICTLY in this JSON format:
 		<TextArea bind:value={world} generating={world_generating} disabled={passed_setting} />
 		{#if !passed_setting}
 			<Button className="blue-button" onclick={generate_world} generating={world_generating}>
-				🎲 {m.generate()}
+				🎲 {m.generate_new()}
+			</Button>
+			<Button className="blue-button" onclick={generate_world_text} generating={world_generating}>
+				🎲 {m.generate_from_text()}
 			</Button>
 		{/if}
 
@@ -123,7 +146,11 @@ Answer STRICTLY in this JSON format:
 		<TextArea generating={place_generating} bind:value={place} disabled={passed_setting} />
 		{#if !passed_setting}
 			<Button onclick={generate_place} className="blue-button" generating={place_generating}>
-				🎲 {m.generate()}
+				🎲 {m.generate_new()}
+			</Button>
+
+			<Button onclick={generate_place_text} className="blue-button" generating={place_generating}>
+				🎲 {m.generate_from_text()}
 			</Button>
 
 			<Button
