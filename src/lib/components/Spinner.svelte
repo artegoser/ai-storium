@@ -1,4 +1,4 @@
-<svg class="spinner h-32 w-32" viewBox="0 0 50 50">
+<svg class="spinner w-16" viewBox="0 0 50 50">
 	<circle
 		cx="25"
 		cy="25"

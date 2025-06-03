@@ -2,6 +2,7 @@
 	import { m } from '$lib/paraglide/messages';
 	import { onMount } from 'svelte';
 	import Spinner from './Spinner.svelte';
+	import Button from './Button.svelte';
 
 	let {
 		src,
@@ -40,6 +41,7 @@
 		{#if error}
 			<div class="error-message">
 				⚠️ {m.failed_image()}
+				<Button onclick={() => (error = false)}>🔃</Button>
 			</div>
 		{:else if !loaded && !error}
 			<Spinner />

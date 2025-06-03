@@ -1,6 +1,7 @@
 <script lang="ts">
 	import AiImage from '$lib/components/AiImage.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import CharDisplay from '$lib/components/CharDisplay.svelte';
 	import Disc from '$lib/components/Disc.svelte';
 	import Label from '$lib/components/Label.svelte';
 	import TextArea from '$lib/components/TextArea.svelte';
@@ -35,11 +36,11 @@
 		place_generating = false;
 	}
 
-	let passed_first_step = $state(false);
+	let passed_setting = $state(false);
 
 	let game_char_description = $state('');
 	let game_char: Character | undefined = $state();
-	let game_char_description_generating = $state(false);
+	let game_char_generating = $state(false);
 
 	async function tryCharacter(description: string) {
 		return await simplePrompt(`Answer STRICTLY in json format. You have to generate a character for a game where fights between characters take place. Create a unique character for the dynamic arena based on the provided description. World description: ${world}. Place description: ${place}. ${description !== '' ? `Character short description: ${description}` : ''}
@@ -48,7 +49,7 @@ Answer STRICTLY in this JSON format:
 		"name": "Creative name, on ${m.lang()}",
 		"description": "Intriguing description, on ${m.lang()}",
 		"visualPrompt": "Prompt for image generation ai, this MUST BE ON ENGLISH",
-		"abilities": [list of abilities (only names) of character for use in battle, on ${m.lang()}]
+		"abilities": [list of abilities (only short names) of character for use in battle, on ${m.lang()}]
 }
 `);
 	}
@@ -63,16 +64,22 @@ Answer STRICTLY in this JSON format:
 		}
 	}
 
-	let passed_second_step = $state(false);
+	let passed_game_char = $state(false);
+
+	let enemy_char_description = $state('');
+	let enemy_char: Character | undefined = $state();
+	let enemy_char_generating = $state(false);
+
+	let passed_enemy_char = $state(false);
 </script>
 
 <Title name="ARENA" />
 
 <div class="flex w-full flex-col-reverse">
-	<Disc name={m.setting()} unlocked={passed_first_step} closed={passed_first_step}>
+	<Disc name={m.setting()} unlocked={passed_setting} closed={passed_setting}>
 		<Label name={m.world()} />
 
-		{#if !passed_first_step}
+		{#if !passed_setting}
 			<div class="flex flex-wrap gap-2">
 				<Button onclick={() => (world = m.default_world())} className="blue-button">
 					{m.default()}
@@ -86,15 +93,15 @@ Answer STRICTLY in this JSON format:
 			</div>
 		{/if}
 
-		<TextArea bind:value={world} generating={world_generating} disabled={passed_first_step} />
-		{#if !passed_first_step}
+		<TextArea bind:value={world} generating={world_generating} disabled={passed_setting} />
+		{#if !passed_setting}
 			<Button className="blue-button" onclick={generate_world} generating={world_generating}>
 				🎲 {m.generate()}
 			</Button>
 		{/if}
 
 		<Label name={m.place()} />
-		{#if !passed_first_step}
+		{#if !passed_setting}
 			<div class="flex flex-wrap gap-2">
 				<Button onclick={() => (place = m.colosseum_place())} className="blue-button">
 					{m.colosseum()}
@@ -107,14 +114,14 @@ Answer STRICTLY in this JSON format:
 				</Button>
 			</div>
 		{/if}
-		<TextArea generating={place_generating} bind:value={place} disabled={passed_first_step} />
-		{#if !passed_first_step}
+		<TextArea generating={place_generating} bind:value={place} disabled={passed_setting} />
+		{#if !passed_setting}
 			<Button onclick={generate_place} className="blue-button" generating={place_generating}>
 				🎲 {m.generate()}
 			</Button>
 
 			<Button
-				onclick={() => (passed_first_step = true)}
+				onclick={() => (passed_setting = true)}
 				className="green-button"
 				generating={place_generating}
 			>
@@ -123,57 +130,69 @@ Answer STRICTLY in this JSON format:
 		{/if}
 	</Disc>
 
-	{#if passed_first_step}
-		<Disc name={m.game_char()} unlocked={passed_second_step} closed={passed_second_step}>
-			<Label name={m.description()} />
-			<TextArea
-				bind:value={game_char_description}
-				generating={game_char_description_generating}
-				disabled={passed_second_step}
-			/>
-			<Button
-				onclick={async () => {
-					game_char_description_generating = true;
-					game_char = await generateCharacter(game_char_description);
-					console.log(game_char);
-					game_char_description_generating = false;
-				}}
-				className="blue-button"
-				generating={game_char_description_generating}
-			>
-				🎲 {m.generate()}
-			</Button>
-
-			{#if game_char}
-				<div class="flex flex-col gap-2">
-					<div class="flex items-start gap-2 max-sm:flex-col">
-						<AiImage prompt={game_char.visualPrompt} className="w-full aspect-square grow-2" />
-						<div class="flex grow-1 flex-col gap-1">
-							<h3 class="text-xl font-bold">
-								{game_char.name}
-							</h3>
-							<div class="flex flex-wrap gap-1">
-								{#each game_char.abilities as ability}
-									<div class="rounded-2xl bg-zinc-900 p-2">
-										{ability}
-									</div>
-								{/each}
-							</div>
-						</div>
-					</div>
-					<div>
-						{game_char.description}
-					</div>
-				</div>
-
+	{#if passed_setting}
+		<Disc name={m.game_char()} unlocked={passed_game_char} closed={passed_game_char}>
+			{#if !passed_game_char}
+				<Label name={m.description()} />
+				<TextArea bind:value={game_char_description} generating={game_char_generating} />
 				<Button
-					onclick={() => (passed_second_step = true)}
-					className="green-button"
-					generating={game_char_description_generating}
+					onclick={async () => {
+						game_char_generating = true;
+						game_char = await generateCharacter(game_char_description);
+						game_char_generating = false;
+					}}
+					className="blue-button"
+					generating={game_char_generating}
 				>
-					{m.confirm()}
+					🎲 {m.generate()}
 				</Button>
 			{/if}
+
+			{#if game_char}
+				<CharDisplay char={game_char} />
+				{#if !passed_game_char}
+					<Button
+						onclick={() => (passed_game_char = true)}
+						className="green-button"
+						generating={game_char_generating}
+					>
+						{m.confirm()}
+					</Button>
+				{/if}
+			{/if}
 		</Disc>
+
+		{#if passed_game_char}
+			<Disc name={m.enemy_char()} unlocked={passed_enemy_char} closed={passed_enemy_char}>
+				{#if !passed_enemy_char}
+					<Label name={m.description()} />
+					<TextArea bind:value={enemy_char_description} generating={enemy_char_generating} />
+					<Button
+						onclick={async () => {
+							enemy_char_generating = true;
+							enemy_char = await generateCharacter(enemy_char_description);
+							enemy_char_generating = false;
+						}}
+						className="blue-button"
+						generating={enemy_char_generating}
+					>
+						🎲 {m.generate()}
+					</Button>
+				{/if}
+
+				{#if enemy_char}
+					<CharDisplay char={enemy_char} />
+					{#if !passed_enemy_char}
+						<Button
+							onclick={() => (passed_enemy_char = true)}
+							className="green-button"
+							generating={enemy_char_generating}
+						>
+							{m.confirm()}
+						</Button>
+					{/if}
+				{/if}
+			</Disc>
+		{/if}
 	{/if}
 </div>
