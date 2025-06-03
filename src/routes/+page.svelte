@@ -1,11 +1,18 @@
 <script>
 	import AiImage from '$lib/components/AiImage.svelte';
-	import Image from '$lib/components/Image.svelte';
+	import LinkButton from '$lib/components/LinkButton.svelte';
+	import Title from '$lib/components/Title.svelte';
+	import { m } from '$lib/paraglide/messages';
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<Title name="STORIUM" />
 
-<AiImage prompt="Mad Scientist with a Watch, in the sky, cartoon style" />
+<div class="flex flex-wrap">
+	<LinkButton href="/arena">
+		⚔️ {m.arena()}</LinkButton
+	>
+</div>
 
-<!-- <Image src="https://i.imgur.com/vZY7s7U.jpeцg" className="w-96 h-96 rounded-2xl" /> -->
+<AiImage
+	prompt="A man with headphones holds the sword and runs, fantasy style, blade runner 2049 neon style"
+/>

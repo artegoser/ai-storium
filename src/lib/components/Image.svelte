@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { m } from '$lib/paraglide/messages';
 	import { onMount } from 'svelte';
+	import Spinner from './Spinner.svelte';
 
 	let {
 		src,
@@ -19,106 +20,53 @@
 			loaded = true;
 		}
 	});
-
-	function handleLoad() {
-		loaded = true;
-	}
-
-	function handleError() {
-		error = true;
-	}
 </script>
 
 <div class="image-container {className}">
-	{#if !loaded && !error}
-		<div class="spinner-container">
-			<svg class="spinner h-32 w-32" viewBox="0 0 50 50">
-				<circle
-					cx="25"
-					cy="25"
-					r="20"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="5"
-					stroke-linecap="round"
-				/>
-			</svg>
-		</div>
-	{/if}
-
-	{#if error}
-		<div class="error-message">
-			<slot name="error">⚠️ {m.failed_image()}</slot>
-		</div>
-	{:else}
+	{#if !error}
 		<img
 			bind:this={imgElement}
 			{src}
 			{alt}
 			class="image"
 			class:loaded
-			onload={handleLoad}
-			onerror={handleError}
+			onload={() => (loaded = true)}
+			onerror={() => (error = true)}
 			style="opacity: {loaded ? 1 : 0}; "
 		/>
 	{/if}
+
+	<div class="status-container">
+		{#if error}
+			<div class="error-message">
+				⚠️ {m.failed_image()}
+			</div>
+		{:else if !loaded && !error}
+			<Spinner />
+			<div class="text-center">
+				{m.generating_image()}
+			</div>
+		{/if}
+	</div>
 </div>
 
 <style lang="postcss">
 	@reference "../../app.css";
 
 	.image-container {
-		@apply relative flex items-center justify-center overflow-hidden bg-zinc-900;
+		@apply relative flex flex-col items-center justify-center overflow-hidden bg-zinc-900;
+		@apply text-center text-2xl font-bold;
 	}
 
-	.spinner-container {
-		position: absolute;
-		display: flex;
-		justify-content: center;
-		align-items: center;
+	.status-container {
+		@apply absolute flex flex-col items-center justify-center;
 	}
-
-	.spinner {
-		animation: rotate 1.5s linear infinite;
-	}
-
 	.image {
-		object-fit: cover;
-
-		transition: opacity 300ms ease-in;
+		@apply object-cover transition-opacity duration-300 ease-in;
 	}
 
 	.error-message {
-		padding: 1rem;
-		text-align: center;
-		color: #e74c3c;
-	}
-
-	@keyframes rotate {
-		0% {
-			transform: rotate(0deg);
-		}
-		100% {
-			transform: rotate(360deg);
-		}
-	}
-
-	@keyframes dash {
-		0% {
-			stroke-dasharray: 1, 150;
-			stroke-dashoffset: 0;
-		}
-		50% {
-			stroke-dasharray: 90, 150;
-			stroke-dashoffset: -35;
-		}
-		100% {
-			stroke-dasharray: 90, 150;
-			stroke-dashoffset: -124;
-		}
-	}
-
-	circle {
-		animation: dash 1.5s ease-in-out infinite;
+		@apply p-4;
+		color: #ffb657;
 	}
 </style>

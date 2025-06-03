@@ -2,6 +2,8 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 
 	"failed_image": "Ошибка в загрузке изображения",
-	"loading_image": "Загрузка изображения",
-	"image": "Изображение"
+	"generating_image": "Генерация изображения",
+	"image": "Изображение",
+
+	"arena": "Арена"
 }

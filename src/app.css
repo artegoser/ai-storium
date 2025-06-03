@@ -5,3 +5,48 @@
 body {
 	@apply bg-zinc-800 text-zinc-100;
 }
+
+.button {
+	@apply rounded-2xl p-2 text-xl font-extrabold transition;
+	@apply bg-linear-to-t from-sky-500 to-indigo-500;
+	@apply hover:from-sky-600 hover:to-indigo-600;
+	@apply hover:scale-95 active:scale-90;
+	@apply active:from-sky-700 active:to-indigo-700;
+}
+
+.spinner {
+	animation: rotate 1.5s linear infinite;
+}
+
+@keyframes rotate {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes dash {
+	0% {
+		stroke-dasharray: 1, 150;
+		stroke-dashoffset: 0;
+	}
+	50% {
+		stroke-dasharray: 90, 150;
+		stroke-dashoffset: -35;
+	}
+	100% {
+		stroke-dasharray: 90, 150;
+		stroke-dashoffset: -124;
+	}
+}
+
+.spinner circle {
+	animation: dash 1.5s ease-in-out infinite;
+}
+
+.interactive {
+	@apply rounded-2xl border bg-zinc-800 placeholder-zinc-500 transition hover:bg-zinc-700 active:bg-zinc-600;
+	@apply ring-0 outline-0;
+}
