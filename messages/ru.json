@@ -17,6 +17,11 @@
 	"world": "Мир",
 	"place": "Место",
 
+	"confirm": "Подтвердить",
+
+	"game_char": "Игровой персонаж",
+	"description": "Описание",
+
 	"generate": "Сгенерировать",
 	"generation_error": "Ошибка генерации",
 

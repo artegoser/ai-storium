@@ -20,7 +20,7 @@ export function getImageSrc(p: ImageParams) {
 	return `${image_base_url}${encodeURIComponent(prompt)}${queryString ? '?' + queryString : ''}`;
 }
 
-export async function getText(messages: Message[]) {
+export async function getText(messages: Message[]): Promise<string> {
 	return (
 		await fetch(text_base_url, {
 			method: 'POST',

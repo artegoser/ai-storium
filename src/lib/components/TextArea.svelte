@@ -60,7 +60,7 @@
 
 <textarea
 	bind:this={inputElement}
-	class="interactive {generating ? ' animate-pulse ' : ''}{className}"
+	class="interactive h-40 w-full {generating ? ' animate-pulse ' : ''}{className}"
 	bind:value
 	readonly={generating || disabled}
 	onkeydown={handleKeydown}

@@ -17,6 +17,11 @@
 	"world": "World",
 	"place": "Place",
 
+	"confirm": "Confirm",
+
+	"game_char": "Game character",
+	"description": "Description",
+
 	"generate": "Generate",
 	"generation_error": "Generation error",
 

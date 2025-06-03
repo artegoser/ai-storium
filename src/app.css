@@ -23,6 +23,12 @@ body {
 	@apply active:from-stone-700 active:to-zinc-700;
 }
 
+.green-button {
+	@apply bg-linear-to-l from-green-700 to-green-800;
+	@apply hover:from-green-800 hover:to-green-900;
+	@apply active:from-green-900 active:to-green-950;
+}
+
 .red-button {
 	@apply bg-linear-to-l from-red-500 to-amber-500;
 	@apply hover:from-red-600 hover:to-amber-600;
