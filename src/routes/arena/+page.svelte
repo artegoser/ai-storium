@@ -73,10 +73,15 @@ Answer STRICTLY in this JSON format:
 	let passed_enemy_char = $state(false);
 </script>
 
-<Title name="ARENA" />
+<Title name="RENA" />
 
 <div class="flex w-full flex-col-reverse">
-	<Disc name={m.setting()} unlocked={passed_setting} closed={passed_setting}>
+	<Disc
+		class="border-blue-600 bg-blue-900"
+		name={m.setting()}
+		unlocked={passed_setting}
+		closed={passed_setting}
+	>
 		<Label name={m.world()} />
 
 		{#if !passed_setting}
@@ -131,7 +136,12 @@ Answer STRICTLY in this JSON format:
 	</Disc>
 
 	{#if passed_setting}
-		<Disc name={m.game_char()} unlocked={passed_game_char} closed={passed_game_char}>
+		<Disc
+			class="border-green-600 bg-green-900"
+			name={m.game_char()}
+			unlocked={passed_game_char}
+			closed={passed_game_char}
+		>
 			{#if !passed_game_char}
 				<Label name={m.description()} />
 				<TextArea bind:value={game_char_description} generating={game_char_generating} />
@@ -163,7 +173,12 @@ Answer STRICTLY in this JSON format:
 		</Disc>
 
 		{#if passed_game_char}
-			<Disc name={m.enemy_char()} unlocked={passed_enemy_char} closed={passed_enemy_char}>
+			<Disc
+				class="border-red-600 bg-red-900"
+				name={m.enemy_char()}
+				unlocked={passed_enemy_char}
+				closed={passed_enemy_char}
+			>
 				{#if !passed_enemy_char}
 					<Label name={m.description()} />
 					<TextArea bind:value={enemy_char_description} generating={enemy_char_generating} />

@@ -20,12 +20,7 @@
 	let opened = $state(true);
 </script>
 
-<div
-	class="my-1 flex w-full flex-col rounded-2xl border border-blue-600 bg-blue-900 p-4{c
-		? ` ${c}`
-		: ''}"
-	transition:slide
->
+<div class="my-1 flex w-full flex-col rounded-2xl border p-4{c ? ` ${c}` : ''}" transition:slide>
 	<button class="flex items-center justify-between" onclick={() => unlocked && (opened = !opened)}>
 		<h2 class="text-2xl font-bold">
 			{name}
