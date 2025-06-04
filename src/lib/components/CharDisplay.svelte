@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages';
 	import type { Character } from '$lib/utils';
 	import AiImage from './AiImage.svelte';
 
@@ -16,7 +17,7 @@
 			</h3>
 			<div class="flex flex-wrap gap-1">
 				<div class="rounded-2xl bg-green-700 p-2">
-					❤️ {char.max_hp}
+					❤️ {char.max_hp >= 0 ? char.max_hp : m.infinity()}
 				</div>
 				{#each char.abilities as ability}
 					<div class="rounded-2xl bg-zinc-900 p-2">
