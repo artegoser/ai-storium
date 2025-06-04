@@ -3,6 +3,8 @@
 
 	"lang": "ENGLISH",
 
+	"created_by": "Created by",
+
 	"failed_image": "Failed to load image",
 	"generating_image": "Generating image",
 	"image": "Image",
@@ -28,15 +30,6 @@
 	"generate_from_text": "Generate from text",
 	"generation_error": "Generation error",
 
-	"default_world": "A grounded, competitive realm where skill and strategy reign supreme. This world operates on clear physical laws and predictable cause-and-effect. Combat is treated as a revered tradition: honorable, intense, and driven by mastery. Energy hums with focused determination, where victory is earned through precision and adaptability. The atmosphere balances tension with respect, emphasizing growth and fair confrontation.",
-	"blood_world": "A savage, visceral dimension where brutality is the only language. Violence here is raw, primal, and glorified. The very air thrums with aggression, amplifying rage and pain into tangible forces. Rules are nonexistent; survival favors the merciless. Gore isn’t just common: it fuels the world’s dark energy, staining reality with a permanent metallic scent. Suffering is art, and spectators crave carnage.",
-	"comedy_world": "An absurd, physics-defying cartoonland where nothing is sacred. Logic is optional, and slapstick reigns. Injuries are temporary gags: characters bounce back from flattening or explosions with a comedic wobble. The world thrives on chaos: gravity falters, props materialize randomly, and failures trigger laugh tracks. Conflict feels like a ridiculous spectacle, where banana peels hold more power than swords.",
-
-	"colosseum": "Colosseum",
-	"catacombs": "Catacombs",
-	"junkyard": "Junkyard",
-
-	"colosseum_place": "A floating, hexagonal platform suspended above mist-shrouded mountains. Polished white marble and silver alloy gleam under crystalline artificial sunlight.",
-	"catacombs_place": "A subterranean network of fleshy, pulsating tunnels beneath a dead city. Walls resemble scar tissue; floors slope into pools of bubbling blood.",
-	"junkyard_place": "A chaotic dumpster dimension inside a collapsing circus tent. Gravity shifts randomly; oversized props (rubber chickens, anvil stacks, giant pies) litter the space."
+	"example_world": "A grounded, competitive realm where skill and strategy reign supreme. This world operates on clear physical laws and predictable cause-and-effect. Combat is treated as a revered tradition: honorable, intense, and driven by mastery. Energy hums with focused determination, where victory is earned through precision and adaptability. The atmosphere balances tension with respect, emphasizing growth and fair confrontation.",
+	"example_place": "A floating, hexagonal platform suspended above mist-shrouded mountains. Polished white marble and silver alloy gleam under crystalline artificial sunlight."
 }

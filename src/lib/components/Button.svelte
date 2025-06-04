@@ -1,12 +1,13 @@
 <script lang="ts">
+	import { state } from '$lib/state.svelte';
+
 	export let onclick: () => any = () => {};
 	export let className: string = '';
 	export let disabled = false;
-	export let generating = false;
 </script>
 
 <button
-	class="button {generating ? ' animate-pulse ' : ''}{className}"
-	disabled={generating || disabled}
+	class="button {state.generating ? ' animate-pulse ' : ''}{className}"
+	disabled={state.generating || disabled}
 	{onclick}><slot /></button
 >

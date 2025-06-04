@@ -6,6 +6,10 @@ body {
 	@apply bg-zinc-800 text-zinc-100;
 }
 
+.warning {
+	@apply rounded-2xl bg-amber-700 p-2 text-lg font-extrabold transition;
+}
+
 .button {
 	@apply rounded-2xl p-2 text-lg font-extrabold transition;
 	@apply hover:scale-95 active:scale-90;

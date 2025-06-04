@@ -1,8 +1,9 @@
 <script lang="ts">
+	import { state } from '$lib/state.svelte';
+
 	export let value: string = '';
 	export let disabled: boolean = false;
 	export let className: string = '';
-	export let generating: boolean = false;
 
 	let inputElement: HTMLTextAreaElement;
 
@@ -60,8 +61,8 @@
 
 <textarea
 	bind:this={inputElement}
-	class="interactive h-40 w-full {generating ? ' animate-pulse ' : ''}{className}"
+	class="interactive h-40 w-full {state.generating ? ' animate-pulse ' : ''}{className}"
 	bind:value
-	readonly={generating || disabled}
+	readonly={state.generating || disabled}
 	onkeydown={handleKeydown}
 ></textarea>

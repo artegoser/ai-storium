@@ -1,13 +1,6 @@
 import { z } from 'zod';
 
-export interface Character {
-	name: string;
-	description: string;
-	max_hp: number;
-	visualPrompt: string;
-	abilities: string[];
-}
-
+export type Character = z.infer<typeof character>;
 export const character = z.object({
 	name: z.string(),
 	description: z.string(),
@@ -15,3 +8,14 @@ export const character = z.object({
 	visualPrompt: z.string(),
 	abilities: z.array(z.string())
 });
+
+export const setting = z.object({
+	worldName: z.string(),
+	worldDescription: z.string(),
+	worldVisualPrompt: z.string(),
+
+	placeName: z.string(),
+	placeDescription: z.string(),
+	placeVisualPrompt: z.string()
+});
+export type Setting = z.infer<typeof setting>;

@@ -1,5 +1,6 @@
 import { image_base_url, text_base_url, text_model } from './config';
 import { m } from './paraglide/messages';
+import { state } from './state.svelte';
 
 export interface Message {
 	role: 'system' | 'user' | 'assistant';
@@ -40,11 +41,16 @@ export function user(content: string): Message {
 	return { role: 'user', content };
 }
 
-export async function simplePrompt(prompt: string) {
+export async function simplePrompt(prompt: string): Promise<string> {
 	try {
-		return await getText([system(prompt)]);
-	} catch (e) {
-		console.log(e);
-		return m.generation_error();
+		state.generating = true;
+		const result = await getText([system(prompt)]);
+		return result;
+	} finally {
+		state.generating = false;
 	}
+}
+
+export async function jsonPrompt(prompt: string): Promise<unknown> {
+	return JSON.parse(await simplePrompt(prompt));
 }

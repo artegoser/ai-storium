@@ -4,92 +4,33 @@
 	import CharDisplay from '$lib/components/CharDisplay.svelte';
 	import Disc from '$lib/components/Disc.svelte';
 	import Label from '$lib/components/Label.svelte';
+	import PlaceDisplay from '$lib/components/PlaceDisplay.svelte';
 	import TextArea from '$lib/components/TextArea.svelte';
 	import Title from '$lib/components/Title.svelte';
+	import Warning from '$lib/components/Warning.svelte';
+	import WorldDisplay from '$lib/components/WorldDisplay.svelte';
 	import { m } from '$lib/paraglide/messages';
 	import { simplePrompt } from '$lib/pollinations';
-	import { character, type Character } from '$lib/utils';
+	import { generateCharacter, generateSetting } from '$lib/prompts';
+	import { type Character, type Setting } from '$lib/utils';
 
-	let world_generating = $state(false);
-	let place_generating = $state(false);
+	let world_short: string = $state('');
+	let place_short: string = $state('');
 
-	let world: string = $state(m.default_world());
-	let place: string = $state(m.colosseum_place());
-
-	async function generate_world() {
-		world_generating = true;
-
-		world = await simplePrompt(
-			`You have to generate a technical description of the world where the battle takes place for the ai battle simulation game. do NOT write name of world. The world can be anything. From dark fantasy to absolute memes and gags. For example: "${m.default_world()}".`
-		);
-
-		world_generating = false;
-	}
-
-	async function generate_world_text() {
-		world_generating = true;
-
-		world = await simplePrompt(
-			`You have to generate a technical description of the world where the battle takes place for the ai battle simulation game. do NOT write name of world. Short description of world: ${world}`
-		);
-
-		world_generating = false;
-	}
-
-	async function generate_place() {
-		place_generating = true;
-
-		place = await simplePrompt(
-			`You have to generate a technical description of the arena where the battle takes place for the ai battle simulation game. do NOT write name of place. For example: "${m.colosseum_place()}". CONSIDER the description of the world: "${world}"`
-		);
-
-		place_generating = false;
-	}
-
-	async function generate_place_text() {
-		place_generating = true;
-
-		place = await simplePrompt(
-			`You have to generate a technical description of the arena where the battle takes place for the ai battle simulation game. do NOT write name of place. Short description of place: ${place}. CONSIDER the description of the world: "${world}"`
-		);
-
-		place_generating = false;
-	}
+	let setting_failed = $state(false);
+	let setting: Setting | undefined = $state();
 
 	let passed_setting = $state(false);
 
-	let game_char_description = $state('');
 	let game_char: Character | undefined = $state();
-	let game_char_generating = $state(false);
-
-	async function tryCharacter(description: string) {
-		return await simplePrompt(`Answer STRICTLY in json format. You have to generate a character for a game where fights between characters take place. Create a unique character for the dynamic arena based on the provided description. World description: ${world}. Place description: ${place}. ${description !== '' ? `Character short description: ${description}` : ''}
-Answer STRICTLY in this JSON format:
-{
-		"name": "Creative name, on ${m.lang()}",
-		"description": "Intriguing description, on ${m.lang()}",
-		"max_hp": max health in number (for human it is 100),
-		"visualPrompt": "Prompt for image generation ai, this MUST BE ON ENGLISH",
-		"abilities": [list of abilities (only short names) of character for use in battle, on ${m.lang()}]
-}
-`);
-	}
-
-	async function generateCharacter(description: string): Promise<Character> {
-		try {
-			let result = JSON.parse(await tryCharacter(description));
-			if (character.parse(result)) return result;
-			else return await generateCharacter(description);
-		} catch {
-			return await generateCharacter(description);
-		}
-	}
+	let game_char_failed = $state(false);
+	let game_char_description = $state('');
 
 	let passed_game_char = $state(false);
 
-	let enemy_char_description = $state('');
 	let enemy_char: Character | undefined = $state();
-	let enemy_char_generating = $state(false);
+	let enemy_char_failed = $state(false);
+	let enemy_char_description = $state('');
 
 	let passed_enemy_char = $state(false);
 </script>
@@ -104,62 +45,47 @@ Answer STRICTLY in this JSON format:
 		closed={passed_setting}
 	>
 		<Label name={m.world()} />
-
 		{#if !passed_setting}
-			<div class="flex flex-wrap gap-2">
-				<Button onclick={() => (world = m.default_world())} className="blue-button">
-					{m.def()}
-				</Button>
-				<Button onclick={() => (world = m.blood_world())} className="red-button">
-					🩸 {m.blood_bath()}
-				</Button>
-				<Button onclick={() => (world = m.comedy_world())} className="gray-button">
-					🤡 {m.comedy()}
-				</Button>
-			</div>
+			<TextArea bind:value={world_short} disabled={passed_setting} />
 		{/if}
 
-		<TextArea bind:value={world} generating={world_generating} disabled={passed_setting} />
-		{#if !passed_setting}
-			<Button className="blue-button" onclick={generate_world} generating={world_generating}>
-				🎲 {m.generate_new()}
-			</Button>
-			<Button className="blue-button" onclick={generate_world_text} generating={world_generating}>
-				🎲 {m.generate_from_text()}
-			</Button>
+		{#if setting}
+			<WorldDisplay {setting} />
 		{/if}
 
 		<Label name={m.place()} />
 		{#if !passed_setting}
-			<div class="flex flex-wrap gap-2">
-				<Button onclick={() => (place = m.colosseum_place())} className="blue-button">
-					{m.colosseum()}
-				</Button>
-				<Button onclick={() => (place = m.catacombs_place())} className="red-button">
-					🩸 {m.catacombs()}
-				</Button>
-				<Button onclick={() => (place = m.junkyard_place())} className="gray-button">
-					🤡 {m.junkyard()}
-				</Button>
-			</div>
+			<TextArea bind:value={place_short} disabled={passed_setting} />
 		{/if}
-		<TextArea generating={place_generating} bind:value={place} disabled={passed_setting} />
+
+		{#if setting}
+			<PlaceDisplay {setting} />
+		{/if}
+
 		{#if !passed_setting}
-			<Button onclick={generate_place} className="blue-button" generating={place_generating}>
-				🎲 {m.generate_new()}
-			</Button>
-
-			<Button onclick={generate_place_text} className="blue-button" generating={place_generating}>
-				🎲 {m.generate_from_text()}
-			</Button>
-
 			<Button
-				onclick={() => (passed_setting = true)}
-				className="green-button"
-				generating={place_generating}
+				onclick={async () => {
+					try {
+						setting_failed = false;
+						setting = await generateSetting(world_short, place_short);
+					} catch {
+						setting_failed = true;
+					}
+				}}
+				className="blue-button"
 			>
-				{m.confirm()}
+				🎲 {m.generate()}
 			</Button>
+
+			{#if setting_failed}
+				<Warning title={m.generation_error()} />
+			{/if}
+
+			{#if setting}
+				<Button onclick={() => (passed_setting = true)} className="green-button">
+					{m.confirm()}
+				</Button>
+			{/if}
 		{/if}
 	</Disc>
 
@@ -172,28 +98,35 @@ Answer STRICTLY in this JSON format:
 		>
 			{#if !passed_game_char}
 				<Label name={m.description()} />
-				<TextArea bind:value={game_char_description} generating={game_char_generating} />
+				<TextArea bind:value={game_char_description} />
+
 				<Button
 					onclick={async () => {
-						game_char_generating = true;
-						game_char = await generateCharacter(game_char_description);
-						game_char_generating = false;
+						try {
+							game_char_failed = false;
+							game_char = await generateCharacter(
+								game_char_description,
+								setting!.worldDescription,
+								setting!.placeDescription
+							);
+						} catch {
+							game_char_failed = true;
+						}
 					}}
 					className="blue-button"
-					generating={game_char_generating}
 				>
 					🎲 {m.generate()}
 				</Button>
+
+				{#if game_char_failed}
+					<Warning title={m.generation_error()} />
+				{/if}
 			{/if}
 
 			{#if game_char}
 				<CharDisplay char={game_char} />
 				{#if !passed_game_char}
-					<Button
-						onclick={() => (passed_game_char = true)}
-						className="green-button"
-						generating={game_char_generating}
-					>
+					<Button onclick={() => (passed_game_char = true)} className="green-button">
 						{m.confirm()}
 					</Button>
 				{/if}
@@ -209,28 +142,36 @@ Answer STRICTLY in this JSON format:
 			>
 				{#if !passed_enemy_char}
 					<Label name={m.description()} />
-					<TextArea bind:value={enemy_char_description} generating={enemy_char_generating} />
+					<TextArea bind:value={enemy_char_description} />
+
 					<Button
 						onclick={async () => {
-							enemy_char_generating = true;
-							enemy_char = await generateCharacter(enemy_char_description);
-							enemy_char_generating = false;
+							try {
+								enemy_char_failed = false;
+								enemy_char = await generateCharacter(
+									enemy_char_description,
+									setting!.worldDescription,
+									setting!.placeDescription,
+									game_char
+								);
+							} catch {
+								enemy_char_failed = true;
+							}
 						}}
 						className="blue-button"
-						generating={enemy_char_generating}
 					>
 						🎲 {m.generate()}
 					</Button>
+
+					{#if enemy_char_failed}
+						<Warning title={m.generation_error()} />
+					{/if}
 				{/if}
 
 				{#if enemy_char}
 					<CharDisplay char={enemy_char} />
 					{#if !passed_enemy_char}
-						<Button
-							onclick={() => (passed_enemy_char = true)}
-							className="green-button"
-							generating={enemy_char_generating}
-						>
+						<Button onclick={() => (passed_enemy_char = true)} className="green-button">
 							{m.confirm()}
 						</Button>
 					{/if}
