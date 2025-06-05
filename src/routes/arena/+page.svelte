@@ -190,7 +190,7 @@
 				autoplay
 			/>
 
-			<AiImage prompt={event.visualPrompt} className="w-full" height={512} />
+			<AiImage prompt={event.visualPrompt} className="w-full aspect-2/1" height={512} />
 			<div>
 				{event.description}
 			</div>
