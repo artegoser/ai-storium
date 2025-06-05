@@ -6,9 +6,13 @@
 	"created_by": "Created by",
 
 	"infinity": "Infinite",
+	"audio": "Audio",
+
+	"failed_audio": "Failed to load audio",
 
 	"failed_image": "Failed to load image",
 	"generating_image": "Generating image",
+	"generating_audio": "Generating audio",
 	"image": "Image",
 
 	"arena": "Arena",

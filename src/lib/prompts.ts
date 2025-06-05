@@ -3,6 +3,10 @@ import { m } from './paraglide/messages';
 import { characters, setting, type Setting } from './types';
 import { jsonPrompt, opt } from './utils';
 
+export function getNarration(obj: unknown) {
+	return `You are a storyteller of ai game where the intersection of two opponents is described. And you must comment interestingly on the data that is provided to you. Data: ${JSON.stringify(obj)}`;
+}
+
 export async function generateSetting(world: string, place: string) {
 	return setting.parse(
 		await jsonPrompt(`You have to generate a setting for a game. Create a well-developed world setting with lore${world !== '' || place !== '' ? ` based on the provided short description` : ''}. When describing the world, describe the entire universe as a whole, not a specific place. Consider the style of the world when writing a visual prompt. For example: realistic, cartoon, anime. ${[opt('World short description', world), opt('Place short description', place)].join(' ')}

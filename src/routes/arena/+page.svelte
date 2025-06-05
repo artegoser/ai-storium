@@ -1,4 +1,5 @@
 <script lang="ts">
+	import AiAudio from '$lib/components/AiAudio.svelte';
 	import AiImage from '$lib/components/AiImage.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import CharDisplay from '$lib/components/CharDisplay.svelte';
@@ -10,7 +11,7 @@
 	import Warning from '$lib/components/Warning.svelte';
 	import WorldDisplay from '$lib/components/WorldDisplay.svelte';
 	import { m } from '$lib/paraglide/messages';
-	import { generateCharacters, generateSetting } from '$lib/prompts';
+	import { generateCharacters, generateSetting, getNarration } from '$lib/prompts';
 	import { type Character, type Setting } from '$lib/types';
 
 	let world_short: string = $state('');
@@ -26,8 +27,8 @@
 	let game_char_description = $state('');
 	let enemy_char_description = $state('');
 
-	let game_char: Character | undefined = $state();
-	let enemy_char: Character | undefined = $state();
+	let gameCharacter: Character | undefined = $state();
+	let enemyCharacter: Character | undefined = $state();
 
 	let passed_chars = $state(false);
 </script>
@@ -41,6 +42,10 @@
 		unlocked={passed_setting}
 		closed={passed_setting}
 	>
+		{#if setting}
+			<AiAudio prompt={getNarration(setting)} />
+		{/if}
+
 		<Label name={m.world()} />
 		{#if !passed_setting}
 			<TextArea bind:value={world_short} disabled={passed_setting} />
@@ -94,14 +99,18 @@
 			unlocked={passed_chars}
 			closed={passed_chars}
 		>
+			{#if enemyCharacter && gameCharacter}
+				<AiAudio prompt={getNarration({ setting, gameCharacter, enemyCharacter })} />
+			{/if}
+
 			<Label name={m.game_char_description()} />
 
 			{#if !passed_chars}
 				<TextArea bind:value={game_char_description} />
 			{/if}
 
-			{#if game_char}
-				<CharDisplay char={game_char} />
+			{#if gameCharacter}
+				<CharDisplay char={gameCharacter} />
 			{/if}
 
 			<Label name={m.enemy_char_description()} />
@@ -110,15 +119,15 @@
 				<TextArea bind:value={enemy_char_description} />
 			{/if}
 
-			{#if enemy_char}
-				<CharDisplay char={enemy_char} />
+			{#if enemyCharacter}
+				<CharDisplay char={enemyCharacter} />
 			{/if}
 
 			{#if !passed_chars}
 				<Button
 					onclick={async () => {
-						game_char = undefined;
-						enemy_char = undefined;
+						gameCharacter = undefined;
+						enemyCharacter = undefined;
 						try {
 							chars_failed = false;
 							const chars = await generateCharacters(
@@ -127,8 +136,8 @@
 								setting!
 							);
 
-							game_char = chars.gameCharacter;
-							enemy_char = chars.enemyCharacter;
+							gameCharacter = chars.gameCharacter;
+							enemyCharacter = chars.enemyCharacter;
 						} catch {
 							chars_failed = true;
 						}
@@ -142,7 +151,7 @@
 					<Warning title={m.generation_error()} />
 				{/if}
 
-				{#if game_char && enemy_char}
+				{#if gameCharacter && enemyCharacter}
 					<Button onclick={() => (passed_chars = true)} className="green-button">
 						{m.confirm()}
 					</Button>
