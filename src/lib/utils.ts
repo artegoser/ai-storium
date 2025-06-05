@@ -12,9 +12,10 @@ export function user(content: string): Message {
 
 export async function simplePrompt(prompt: string): Promise<string> {
 	console.log('Prompt:', prompt);
+	console.log(cleanWhitespace(prompt));
 	try {
 		state.generating = true;
-		const response = await getText([system(prompt)]);
+		const response = await getText([system(cleanWhitespace(prompt))]);
 
 		console.log('Response:', response);
 
@@ -30,4 +31,8 @@ export async function jsonPrompt(prompt: string): Promise<unknown> {
 
 export function opt(msg: string, description: string) {
 	return description !== '' ? `${msg}: "${description}".` : '';
+}
+
+export function cleanWhitespace(input: string): string {
+	return input.replace(/[\s]+/g, ' ').trim();
 }

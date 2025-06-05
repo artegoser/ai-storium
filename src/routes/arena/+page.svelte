@@ -41,33 +41,33 @@
 <Title name="RENA" />
 
 <div class="flex w-full flex-col-reverse">
-	<Disc
-		class="border-blue-600 bg-blue-900"
-		name={m.setting()}
-		unlocked={passed_setting}
-		closed={passed_setting}
-	>
+	<Disc class="border-blue-600 bg-blue-900" name={m.setting()} unlocked={passed_setting}>
 		{#if setting}
-			<AiAudio prompt={getSettingNarration(setting)} />
+			<AiAudio prompt={getSettingNarration(setting)} autoplay={!passed_setting} />
 		{/if}
 
-		<Label name={m.world()} />
-		{#if !passed_setting}
-			<TextArea bind:value={world_short} disabled={passed_setting} />
-		{/if}
+		<div class="grid grid-cols-2 gap-2 max-sm:grid-cols-1">
+			<div class="flex flex-col gap-2">
+				<Label name={m.world()} />
+				{#if !passed_setting}
+					<TextArea bind:value={world_short} disabled={passed_setting} />
+				{/if}
 
-		{#if setting}
-			<WorldDisplay {setting} />
-		{/if}
+				{#if setting}
+					<WorldDisplay {setting} />
+				{/if}
+			</div>
+			<div class="flex flex-col gap-2">
+				<Label name={m.place()} />
+				{#if !passed_setting}
+					<TextArea bind:value={place_short} disabled={passed_setting} />
+				{/if}
 
-		<Label name={m.place()} />
-		{#if !passed_setting}
-			<TextArea bind:value={place_short} disabled={passed_setting} />
-		{/if}
-
-		{#if setting}
-			<PlaceDisplay {setting} />
-		{/if}
+				{#if setting}
+					<PlaceDisplay {setting} />
+				{/if}
+			</div>
+		</div>
 
 		{#if !passed_setting}
 			<Button
@@ -98,35 +98,39 @@
 	</Disc>
 
 	{#if passed_setting}
-		<Disc
-			class="border-green-600 bg-green-900"
-			name={m.characters()}
-			unlocked={passed_chars}
-			closed={passed_chars}
-		>
+		<Disc class="border-green-600 bg-green-900" name={m.characters()} unlocked={passed_chars}>
 			{#if enemyCharacter && gameCharacter}
-				<AiAudio prompt={getCharactersNarration({ setting, gameCharacter, enemyCharacter })} />
+				<AiAudio
+					prompt={getCharactersNarration({ setting, gameCharacter, enemyCharacter })}
+					autoplay={!passed_chars}
+				/>
 			{/if}
 
-			<Label name={m.game_char_description()} />
+			<div class="grid grid-cols-2 gap-2 max-sm:grid-cols-1">
+				<div class="flex flex-col gap-2">
+					<Label name={m.game_char_description()} />
 
-			{#if !passed_chars}
-				<TextArea bind:value={game_char_description} />
-			{/if}
+					{#if !passed_chars}
+						<TextArea bind:value={game_char_description} />
+					{/if}
 
-			{#if gameCharacter}
-				<CharDisplay char={gameCharacter} />
-			{/if}
+					{#if gameCharacter}
+						<CharDisplay char={gameCharacter} />
+					{/if}
+				</div>
 
-			<Label name={m.enemy_char_description()} />
+				<div class="flex flex-col gap-2">
+					<Label name={m.enemy_char_description()} />
 
-			{#if !passed_chars}
-				<TextArea bind:value={enemy_char_description} />
-			{/if}
+					{#if !passed_chars}
+						<TextArea bind:value={enemy_char_description} />
+					{/if}
 
-			{#if enemyCharacter}
-				<CharDisplay char={enemyCharacter} />
-			{/if}
+					{#if enemyCharacter}
+						<CharDisplay char={enemyCharacter} />
+					{/if}
+				</div>
+			</div>
 
 			{#if !passed_chars}
 				<Button

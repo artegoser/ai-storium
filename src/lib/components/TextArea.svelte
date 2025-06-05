@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { state } from '$lib/state.svelte';
+	import { slide } from 'svelte/transition';
 
 	export let value: string = '';
 	export let disabled: boolean = false;
@@ -65,4 +66,5 @@
 	bind:value
 	readonly={state.generating || disabled}
 	onkeydown={handleKeydown}
+	transition:slide
 ></textarea>

@@ -3,49 +3,23 @@
 	import { onMount } from 'svelte';
 	import Spinner from './Spinner.svelte';
 	import Button from './Button.svelte';
-	import { autoplay_audio } from '$lib/config';
+	import { slide } from 'svelte/transition';
 
 	let {
-		getAudio,
+		src,
 		ariaLabel = m.audio(),
-		className = ''
+		className = '',
+		autoplay = false
 	}: {
-		getAudio: () => Promise<Blob>;
+		src: string | undefined;
 		ariaLabel?: string;
 		className?: string;
+		autoplay?: boolean;
 	} = $props();
 
 	let loaded = $state(false);
 	let error = $state(false);
-	let audioUrl = $state<string | null>(null);
 	let audioElement: HTMLAudioElement | undefined = $state();
-
-	$effect(() => {
-		let objectUrl: string | null = null;
-
-		async function loadAudio() {
-			try {
-				const blob = await getAudio();
-				objectUrl = URL.createObjectURL(blob);
-				audioUrl = objectUrl;
-				loaded = false;
-				error = false;
-			} catch (err) {
-				console.error('Audio loading failed', err);
-				error = true;
-			}
-		}
-
-		loadAudio();
-
-		return () => {
-			if (objectUrl) URL.revokeObjectURL(objectUrl);
-			if (audioUrl) {
-				URL.revokeObjectURL(audioUrl);
-				audioUrl = null;
-			}
-		};
-	});
 
 	function retry() {
 		error = false;
@@ -61,12 +35,12 @@
 	});
 </script>
 
-<div class="audio-container {className}">
-	{#if audioUrl && !error}
+<div class="audio-container {className}" transition:slide>
+	{#if src && !error}
 		<audio
 			bind:this={audioElement}
-			autoplay={autoplay_audio}
-			src={audioUrl}
+			{autoplay}
+			{src}
 			aria-label={ariaLabel}
 			class="audio"
 			class:loaded
@@ -80,7 +54,7 @@
 		{#if error}
 			<div class="error-message">
 				⚠️ {m.failed_audio()}
-				<Button on:click={retry}>🔃</Button>
+				<Button onclick={retry}>🔃</Button>
 			</div>
 		{:else if !loaded && !error}
 			<Spinner />
