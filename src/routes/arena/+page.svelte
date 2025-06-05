@@ -43,7 +43,6 @@
 	let passed_chars = $state(false);
 
 	let events: Event[] = $state([]);
-	let currentEvent: Event | undefined = $state();
 	let game_char_action: string = $state('');
 	let currentEventFailed = $state(false);
 </script>
@@ -180,7 +179,7 @@
 	{/if}
 
 	{#each events as event, i}
-		<Disc class="border-red-600 bg-red-900" name="{m.round()} {i}" unlocked>
+		<Disc class="border-red-600 bg-red-900" name="{m.round()} {i + 1}" unlocked>
 			<AiAudio
 				prompt={getEventNarration({
 					setting,
@@ -190,37 +189,38 @@
 				})}
 			/>
 
+			<AiImage prompt={event.visualPrompt} className="w-full" height={512} />
+			<div>
+				{event.description}
+			</div>
+
 			<OnlySplit>
 				<SmallCharDisplay char={gameCharacter!} hp={event.gameCharacterHp} />
 				<SmallCharDisplay char={enemyCharacter!} hp={event.enemyCharacterHp} />
 			</OnlySplit>
-
-			<AiImage prompt={event.visualPrompt} className="w-full" />
-			<div>
-				{event.description}
-			</div>
 		</Disc>
 	{/each}
 
 	{#if passed_chars}
 		<Disc class="border-blue-600 bg-blue-900" name={m.new_round()}>
 			<Label name={m.game_char_action()} />
-			<TextArea bind:value={game_char_description} />
+			<TextArea bind:value={game_char_action} />
 
 			<Button
 				onclick={async () => {
-					currentEvent = undefined;
 					try {
 						currentEventFailed = false;
-						const event = await generateEvent(
-							game_char_action,
-							events,
-							gameCharacter!,
-							enemyCharacter!,
-							setting!
-						);
 
-						currentEvent = event;
+						events.push(
+							await generateEvent(
+								game_char_action,
+								events,
+								gameCharacter!,
+								enemyCharacter!,
+								setting!
+							)
+						);
+						game_char_action = '';
 					} catch {
 						currentEventFailed = true;
 					}
@@ -232,28 +232,6 @@
 
 			{#if currentEventFailed}
 				<Warning title={m.generation_error()} />
-			{/if}
-
-			{#if currentEvent}
-				<OnlySplit>
-					<SmallCharDisplay char={gameCharacter!} hp={currentEvent.gameCharacterHp} />
-					<SmallCharDisplay char={enemyCharacter!} hp={currentEvent.enemyCharacterHp} />
-				</OnlySplit>
-
-				<AiImage prompt={currentEvent.visualPrompt} className="w-full" height={512} />
-				<div>
-					{currentEvent.description}
-				</div>
-
-				<Button
-					onclick={() => {
-						events.push(currentEvent!);
-						currentEvent = undefined;
-					}}
-					className="green-button"
-				>
-					{m.confirm()}
-				</Button>
 			{/if}
 		</Disc>
 	{/if}

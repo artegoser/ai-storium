@@ -29,7 +29,7 @@
 			bind:this={imgElement}
 			{src}
 			{alt}
-			class="image"
+			class="image {className}"
 			class:loaded
 			onload={() => (loaded = true)}
 			onerror={() => (error = true)}
