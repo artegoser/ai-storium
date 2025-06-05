@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { m } from '$lib/paraglide/messages';
-	import type { Character } from '$lib/utils';
+	import type { Character } from '$lib/types';
 	import AiImage from './AiImage.svelte';
 
 	export let char: Character;

@@ -1,21 +1,33 @@
-import { z } from 'zod';
+import { m } from './paraglide/messages';
+import { getText, type Message } from './pollinations';
+import { state } from './state.svelte';
 
-export type Character = z.infer<typeof character>;
-export const character = z.object({
-	name: z.string(),
-	description: z.string(),
-	max_hp: z.number(),
-	visualPrompt: z.string(),
-	abilities: z.array(z.string())
-});
+export function system(content: string): Message {
+	return { role: 'system', content: `ANSWER IN ${m.lang()}. ${content}` };
+}
 
-export const setting = z.object({
-	worldName: z.string(),
-	worldDescription: z.string(),
-	worldVisualPrompt: z.string(),
+export function user(content: string): Message {
+	return { role: 'user', content };
+}
 
-	placeName: z.string(),
-	placeDescription: z.string(),
-	placeVisualPrompt: z.string()
-});
-export type Setting = z.infer<typeof setting>;
+export async function simplePrompt(prompt: string): Promise<string> {
+	console.log('Prompt:', prompt);
+	try {
+		state.generating = true;
+		const response = await getText([system(prompt)]);
+
+		console.log('Response:', response);
+
+		return response;
+	} finally {
+		state.generating = false;
+	}
+}
+
+export async function jsonPrompt(prompt: string): Promise<unknown> {
+	return JSON.parse(await simplePrompt(prompt));
+}
+
+export function opt(msg: string, description: string) {
+	return description !== '' ? `${msg}: "${description}".` : '';
+}

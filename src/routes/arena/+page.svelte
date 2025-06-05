@@ -10,9 +10,8 @@
 	import Warning from '$lib/components/Warning.svelte';
 	import WorldDisplay from '$lib/components/WorldDisplay.svelte';
 	import { m } from '$lib/paraglide/messages';
-	import { simplePrompt } from '$lib/pollinations';
-	import { generateCharacter, generateSetting } from '$lib/prompts';
-	import { type Character, type Setting } from '$lib/utils';
+	import { generateCharacters, generateSetting } from '$lib/prompts';
+	import { type Character, type Setting } from '$lib/types';
 
 	let world_short: string = $state('');
 	let place_short: string = $state('');
@@ -22,17 +21,15 @@
 
 	let passed_setting = $state(false);
 
-	let game_char: Character | undefined = $state();
-	let game_char_failed = $state(false);
+	let chars_failed = $state(false);
+
 	let game_char_description = $state('');
-
-	let passed_game_char = $state(false);
-
-	let enemy_char: Character | undefined = $state();
-	let enemy_char_failed = $state(false);
 	let enemy_char_description = $state('');
 
-	let passed_enemy_char = $state(false);
+	let game_char: Character | undefined = $state();
+	let enemy_char: Character | undefined = $state();
+
+	let passed_chars = $state(false);
 </script>
 
 <Title name="RENA" />
@@ -65,6 +62,7 @@
 		{#if !passed_setting}
 			<Button
 				onclick={async () => {
+					setting = undefined;
 					try {
 						setting_failed = false;
 						setting = await generateSetting(world_short, place_short);
@@ -92,25 +90,45 @@
 	{#if passed_setting}
 		<Disc
 			class="border-green-600 bg-green-900"
-			name={m.game_char()}
-			unlocked={passed_game_char}
-			closed={passed_game_char}
+			name={m.characters()}
+			unlocked={passed_chars}
+			closed={passed_chars}
 		>
-			{#if !passed_game_char}
-				<Label name={m.description()} />
+			<Label name={m.game_char_description()} />
+
+			{#if !passed_chars}
 				<TextArea bind:value={game_char_description} />
+			{/if}
+
+			{#if game_char}
+				<CharDisplay char={game_char} />
+			{/if}
+
+			<Label name={m.enemy_char_description()} />
+
+			{#if !passed_chars}
+				<TextArea bind:value={enemy_char_description} />
+
+				{#if enemy_char}
+					<CharDisplay char={enemy_char} />
+				{/if}
 
 				<Button
 					onclick={async () => {
+						game_char = undefined;
+						enemy_char = undefined;
 						try {
-							game_char_failed = false;
-							game_char = await generateCharacter(
+							chars_failed = false;
+							const chars = await generateCharacters(
 								game_char_description,
-								setting!.worldDescription,
-								setting!.placeDescription
+								enemy_char_description,
+								setting!
 							);
+
+							game_char = chars.gameCharacter;
+							enemy_char = chars.enemyCharacter;
 						} catch {
-							game_char_failed = true;
+							chars_failed = true;
 						}
 					}}
 					className="blue-button"
@@ -118,65 +136,16 @@
 					🎲 {m.generate()}
 				</Button>
 
-				{#if game_char_failed}
+				{#if chars_failed}
 					<Warning title={m.generation_error()} />
 				{/if}
-			{/if}
 
-			{#if game_char}
-				<CharDisplay char={game_char} />
-				{#if !passed_game_char}
-					<Button onclick={() => (passed_game_char = true)} className="green-button">
+				{#if game_char && enemy_char}
+					<Button onclick={() => (passed_chars = true)} className="green-button">
 						{m.confirm()}
 					</Button>
 				{/if}
 			{/if}
 		</Disc>
-
-		{#if passed_game_char}
-			<Disc
-				class="border-red-600 bg-red-900"
-				name={m.enemy_char()}
-				unlocked={passed_enemy_char}
-				closed={passed_enemy_char}
-			>
-				{#if !passed_enemy_char}
-					<Label name={m.description()} />
-					<TextArea bind:value={enemy_char_description} />
-
-					<Button
-						onclick={async () => {
-							try {
-								enemy_char_failed = false;
-								enemy_char = await generateCharacter(
-									enemy_char_description,
-									setting!.worldDescription,
-									setting!.placeDescription,
-									game_char
-								);
-							} catch {
-								enemy_char_failed = true;
-							}
-						}}
-						className="blue-button"
-					>
-						🎲 {m.generate()}
-					</Button>
-
-					{#if enemy_char_failed}
-						<Warning title={m.generation_error()} />
-					{/if}
-				{/if}
-
-				{#if enemy_char}
-					<CharDisplay char={enemy_char} />
-					{#if !passed_enemy_char}
-						<Button onclick={() => (passed_enemy_char = true)} className="green-button">
-							{m.confirm()}
-						</Button>
-					{/if}
-				{/if}
-			</Disc>
-		{/if}
 	{/if}
 </div>

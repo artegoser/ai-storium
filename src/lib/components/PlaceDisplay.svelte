@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Setting } from '$lib/utils';
+	import type { Setting } from '$lib/types';
 	import AiImage from './AiImage.svelte';
 
 	export let setting: Setting;
