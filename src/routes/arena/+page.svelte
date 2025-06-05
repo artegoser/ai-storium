@@ -42,6 +42,7 @@
 	let passed_chars = $state(false);
 
 	let events: Event[] = $state([]);
+	let currentEvent: Event | undefined = $state();
 </script>
 
 <Title name="RENA" />
@@ -199,6 +200,31 @@
 	{/each}
 
 	{#if passed_chars}
-		<Disc name={m.new_round()}></Disc>
+		<Disc name={m.new_round()}>
+			<Label name={m.game_char_action()} />
+			<TextArea bind:value={game_char_description} />
+
+			{#if currentEvent}
+				<OnlySplit>
+					<SmallCharDisplay char={gameCharacter!} hp={event.gameCharacterHp} />
+					<SmallCharDisplay char={enemyCharacter!} hp={event.enemyCharacterHp} />
+				</OnlySplit>
+
+				<AiImage prompt={event.visualPrompt} className="w-full" />
+				<div>
+					{event.description}
+				</div>
+
+				<Button
+					onclick={() => {
+						events.push(currentEvent!);
+						currentEvent = undefined;
+					}}
+					className="green-button"
+				>
+					{m.confirm()}
+				</Button>
+			{/if}
+		</Disc>
 	{/if}
 </div>
