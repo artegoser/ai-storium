@@ -6,7 +6,7 @@
 	export let char: Character;
 </script>
 
-<div class="flex flex-col items-start gap-2 border-2 max-sm:flex-col">
+<div class="flex flex-col items-start gap-2 rounded-2xl border-2 p-2 max-sm:flex-col">
 	{#key char.visualPrompt}
 		<AiImage prompt={char.visualPrompt} className="w-full aspect-square" />
 	{/key}

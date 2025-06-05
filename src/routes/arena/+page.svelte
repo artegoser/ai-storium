@@ -16,6 +16,7 @@
 	import { m } from '$lib/paraglide/messages';
 	import {
 		generateCharacters,
+		generateEvent,
 		generateSetting,
 		getCharactersNarration,
 		getEventNarration,
@@ -43,6 +44,8 @@
 
 	let events: Event[] = $state([]);
 	let currentEvent: Event | undefined = $state();
+	let game_char_action: string = $state('');
+	let currentEventFailed = $state(false);
 </script>
 
 <Title name="RENA" />
@@ -204,15 +207,42 @@
 			<Label name={m.game_char_action()} />
 			<TextArea bind:value={game_char_description} />
 
+			<Button
+				onclick={async () => {
+					currentEvent = undefined;
+					try {
+						currentEventFailed = false;
+						const event = await generateEvent(
+							game_char_action,
+							events,
+							gameCharacter!,
+							enemyCharacter!,
+							setting!
+						);
+
+						currentEvent = event;
+					} catch {
+						currentEventFailed = true;
+					}
+				}}
+				className="blue-button"
+			>
+				🎲 {m.generate()}
+			</Button>
+
+			{#if currentEventFailed}
+				<Warning title={m.generation_error()} />
+			{/if}
+
 			{#if currentEvent}
 				<OnlySplit>
-					<SmallCharDisplay char={gameCharacter!} hp={event.gameCharacterHp} />
-					<SmallCharDisplay char={enemyCharacter!} hp={event.enemyCharacterHp} />
+					<SmallCharDisplay char={gameCharacter!} hp={currentEvent.gameCharacterHp} />
+					<SmallCharDisplay char={enemyCharacter!} hp={currentEvent.enemyCharacterHp} />
 				</OnlySplit>
 
-				<AiImage prompt={event.visualPrompt} className="w-full" />
+				<AiImage prompt={currentEvent.visualPrompt} className="w-full" />
 				<div>
-					{event.description}
+					{currentEvent.description}
 				</div>
 
 				<Button

@@ -1,6 +1,6 @@
 import { m } from './paraglide/messages';
 
-import { characters, setting, type Character, type Setting } from './types';
+import { characters, event, setting, type Character, type Event, type Setting } from './types';
 import { jsonPrompt, opt } from './utils';
 
 const arena_game_description = 'a game that describes two characters clashing';
@@ -109,7 +109,7 @@ export async function generateEvent(
 	enemyCharacter: Character,
 	setting: Setting
 ) {
-	return characters.parse(
+	return event.parse(
 		await jsonPrompt(`
 
 			World Setting: ${JSON.stringify(setting)}.
