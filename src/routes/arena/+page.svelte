@@ -11,7 +11,12 @@
 	import Warning from '$lib/components/Warning.svelte';
 	import WorldDisplay from '$lib/components/WorldDisplay.svelte';
 	import { m } from '$lib/paraglide/messages';
-	import { generateCharacters, generateSetting, getNarration } from '$lib/prompts';
+	import {
+		generateCharacters,
+		generateSetting,
+		getCharactersNarration,
+		getSettingNarration
+	} from '$lib/prompts';
 	import { type Character, type Setting } from '$lib/types';
 
 	let world_short: string = $state('');
@@ -43,7 +48,7 @@
 		closed={passed_setting}
 	>
 		{#if setting}
-			<AiAudio prompt={getNarration(setting)} />
+			<AiAudio prompt={getSettingNarration(setting)} />
 		{/if}
 
 		<Label name={m.world()} />
@@ -100,7 +105,7 @@
 			closed={passed_chars}
 		>
 			{#if enemyCharacter && gameCharacter}
-				<AiAudio prompt={getNarration({ setting, gameCharacter, enemyCharacter })} />
+				<AiAudio prompt={getCharactersNarration({ setting, gameCharacter, enemyCharacter })} />
 			{/if}
 
 			<Label name={m.game_char_description()} />

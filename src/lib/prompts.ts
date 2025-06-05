@@ -3,8 +3,12 @@ import { m } from './paraglide/messages';
 import { characters, setting, type Setting } from './types';
 import { jsonPrompt, opt } from './utils';
 
-export function getNarration(obj: unknown) {
-	return `You are a storyteller of ai game where the intersection of two opponents is described. And you must comment interestingly on the data that is provided to you. Data: ${JSON.stringify(obj)}`;
+export function getSettingNarration(obj: unknown) {
+	return `You are a storyteller of ai game where the intersection of two opponents is described. Describe the world setting in an intriguing way: ${JSON.stringify(obj)}`;
+}
+
+export function getCharactersNarration(obj: unknown) {
+	return `You are a storyteller of ai game where the intersection of two opponents is described. Describe the characters in an intriguing way: ${JSON.stringify(obj)}`;
 }
 
 export async function generateSetting(world: string, place: string) {
