@@ -11,7 +11,7 @@
 	class="flex flex-col items-center justify-center gap-2 rounded-2xl border-2 p-2 max-sm:flex-col"
 >
 	{#key char.visualPrompt}
-		<AiImage prompt={char.visualPrompt} className="w-96 aspect-square" />
+		<AiImage prompt={char.visualPrompt} className="max-w-96 w-full aspect-square" />
 	{/key}
 	<h3 class="text-xl font-bold">
 		{char.name}

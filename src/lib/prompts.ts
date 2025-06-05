@@ -77,7 +77,9 @@ export async function generateCharacters(
 	setting: Setting
 ) {
 	return characters.parse(
-		await jsonPrompt(`You have to generate a two characters for ${arena_game_description}.
+		await jsonPrompt(`
+			
+			You have to generate a two characters for ${arena_game_description}.
 			
 			Setting: ${JSON.stringify(setting)}. 
 			

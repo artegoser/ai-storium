@@ -187,6 +187,7 @@
 					enemyCharacter,
 					events: events.slice(0, i + 1)
 				})}
+				autoplay
 			/>
 
 			<AiImage prompt={event.visualPrompt} className="w-full" height={512} />
