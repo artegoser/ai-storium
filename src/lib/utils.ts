@@ -14,8 +14,7 @@ export function user(content: string): Message {
 }
 
 export async function simplePrompt(prompt: string): Promise<string> {
-	console.log('Prompt:', prompt);
-	console.log(cleanWhitespace(prompt));
+	console.log('Prompt:', trimIndent(prompt));
 	try {
 		state.generating = true;
 		const response = await getText([system(cleanWhitespace(prompt))]);
@@ -38,4 +37,35 @@ export function opt(msg: string, description: unknown) {
 
 export function cleanWhitespace(input: string): string {
 	return input.replace(/[\s]+/g, ' ').trim();
+}
+
+export function trimIndent(str: string) {
+	if (str === '') return '';
+
+	const lines = str.split('\n');
+
+	while (lines.length > 0 && lines[0].trim() === '') {
+		lines.shift();
+	}
+
+	while (lines.length > 0 && lines[lines.length - 1].trim() === '') {
+		lines.pop();
+	}
+
+	if (lines.length === 0) return '';
+
+	let minIndent = Infinity;
+	for (const line of lines) {
+		if (line.trim() !== '') {
+			let indent = 0;
+			while (indent < line.length && line[indent].trim() === '') {
+				indent++;
+			}
+			if (indent < minIndent) minIndent = indent;
+		}
+	}
+
+	minIndent = minIndent === Infinity ? 0 : minIndent;
+
+	return lines.map((line) => line.substring(minIndent)).join('\n');
 }

@@ -7,6 +7,8 @@ export interface Message {
 
 export interface ImageParams {
 	prompt: string;
+	width?: string;
+	height?: string;
 }
 
 export function getImageSrc(p: ImageParams) {

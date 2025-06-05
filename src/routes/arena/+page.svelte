@@ -180,7 +180,7 @@
 	{/if}
 
 	{#each events as event, i}
-		<Disc name="{m.round()} {i}" unlocked>
+		<Disc class="border-red-600 bg-red-900" name="{m.round()} {i}" unlocked>
 			<AiAudio
 				prompt={getEventNarration({
 					setting,
@@ -203,7 +203,7 @@
 	{/each}
 
 	{#if passed_chars}
-		<Disc name={m.new_round()}>
+		<Disc class="border-blue-600 bg-blue-900" name={m.new_round()}>
 			<Label name={m.game_char_action()} />
 			<TextArea bind:value={game_char_description} />
 
@@ -240,7 +240,7 @@
 					<SmallCharDisplay char={enemyCharacter!} hp={currentEvent.enemyCharacterHp} />
 				</OnlySplit>
 
-				<AiImage prompt={currentEvent.visualPrompt} className="w-full" />
+				<AiImage prompt={currentEvent.visualPrompt} className="w-full" height={512} />
 				<div>
 					{currentEvent.description}
 				</div>
