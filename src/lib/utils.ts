@@ -3,7 +3,10 @@ import { getText, type Message } from './pollinations';
 import { state } from './state.svelte';
 
 export function system(content: string): Message {
-	return { role: 'system', content: `ANSWER IN ${m.lang()}. ${content}` };
+	return {
+		role: 'system',
+		content: `SYSTEM_TIME=${new Date().toString()}. -1 health is INFINITE. ANSWER IN ${m.lang()}. ${content}`
+	};
 }
 
 export function user(content: string): Message {
@@ -29,8 +32,8 @@ export async function jsonPrompt(prompt: string): Promise<unknown> {
 	return JSON.parse(await simplePrompt(prompt));
 }
 
-export function opt(msg: string, description: string) {
-	return description !== '' ? `${msg}: "${description}".` : '';
+export function opt(msg: string, description: unknown) {
+	return description ? `${msg}: "${JSON.stringify(description)}".` : '';
 }
 
 export function cleanWhitespace(input: string): string {

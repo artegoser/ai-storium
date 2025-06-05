@@ -5,7 +5,10 @@
 	import CharDisplay from '$lib/components/CharDisplay.svelte';
 	import Disc from '$lib/components/Disc.svelte';
 	import Label from '$lib/components/Label.svelte';
+	import OnlySplit from '$lib/components/OnlySplit.svelte';
 	import PlaceDisplay from '$lib/components/PlaceDisplay.svelte';
+	import SmallCharDisplay from '$lib/components/SmallCharDisplay.svelte';
+	import Split from '$lib/components/Split.svelte';
 	import TextArea from '$lib/components/TextArea.svelte';
 	import Title from '$lib/components/Title.svelte';
 	import Warning from '$lib/components/Warning.svelte';
@@ -15,9 +18,10 @@
 		generateCharacters,
 		generateSetting,
 		getCharactersNarration,
+		getEventNarration,
 		getSettingNarration
 	} from '$lib/prompts';
-	import { type Character, type Setting } from '$lib/types';
+	import { type Character, type Event, type Setting } from '$lib/types';
 
 	let world_short: string = $state('');
 	let place_short: string = $state('');
@@ -36,6 +40,8 @@
 	let enemyCharacter: Character | undefined = $state();
 
 	let passed_chars = $state(false);
+
+	let events: Event[] = $state([]);
 </script>
 
 <Title name="RENA" />
@@ -106,7 +112,7 @@
 				/>
 			{/if}
 
-			<div class="grid grid-cols-2 gap-2 max-sm:grid-cols-1">
+			<Split>
 				<div class="flex flex-col gap-2">
 					<Label name={m.game_char_description()} />
 
@@ -130,7 +136,7 @@
 						<CharDisplay char={enemyCharacter} />
 					{/if}
 				</div>
-			</div>
+			</Split>
 
 			{#if !passed_chars}
 				<Button
@@ -167,5 +173,32 @@
 				{/if}
 			{/if}
 		</Disc>
+	{/if}
+
+	{#each events as event, i}
+		<Disc name="{m.round()} {i}" unlocked>
+			<AiAudio
+				prompt={getEventNarration({
+					setting,
+					gameCharacter,
+					enemyCharacter,
+					events: events.slice(0, i + 1)
+				})}
+			/>
+
+			<OnlySplit>
+				<SmallCharDisplay char={gameCharacter!} hp={event.gameCharacterHp} />
+				<SmallCharDisplay char={enemyCharacter!} hp={event.enemyCharacterHp} />
+			</OnlySplit>
+
+			<AiImage prompt={event.visualPrompt} className="w-full" />
+			<div>
+				{event.description}
+			</div>
+		</Disc>
+	{/each}
+
+	{#if passed_chars}
+		<Disc name={m.new_round()}></Disc>
 	{/if}
 </div>

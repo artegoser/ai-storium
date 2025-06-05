@@ -1,5 +1,14 @@
 import { z } from 'zod';
 
+export const event = z.object({
+	visualPrompt: z.string(),
+	description: z.string(),
+
+	gameCharacterHp: z.number(),
+	enemyCharacterHp: z.number()
+});
+export type Event = z.infer<typeof event>;
+
 export type Character = z.infer<typeof character>;
 export const character = z.object({
 	name: z.string(),
