@@ -108,11 +108,13 @@
 
 			{#if !passed_chars}
 				<TextArea bind:value={enemy_char_description} />
+			{/if}
 
-				{#if enemy_char}
-					<CharDisplay char={enemy_char} />
-				{/if}
+			{#if enemy_char}
+				<CharDisplay char={enemy_char} />
+			{/if}
 
+			{#if !passed_chars}
 				<Button
 					onclick={async () => {
 						game_char = undefined;
