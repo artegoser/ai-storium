@@ -40,8 +40,9 @@
 	<div class="status-container">
 		{#if error}
 			<div class="error-message">
-				⚠️ {m.failed_image()}
-				<Button onclick={() => (error = false)}>🔃</Button>
+				<button onclick={() => (error = false)}>
+					⚠️ {m.failed_image()} 🔃
+				</button>
 			</div>
 		{:else if !loaded && !error}
 			<Spinner />
