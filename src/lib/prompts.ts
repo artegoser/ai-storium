@@ -54,6 +54,10 @@ export async function generateSetting(world: string, place: string) {
 			When describing the world, describe the entire universe 
 			as a whole, not a specific place. For example: realistic, 
 			cartoon, anime. 
+
+			In descriptions, do not repeat the name of the world at 
+			the beginning. And do not describe the characters. They 
+			will be described in the next step.
 			
 			${[opt('World prompt', world), opt('Place prompt', place)].join(' ')}
 
@@ -115,11 +119,12 @@ export async function generateEvent(
 		await jsonPrompt(`
 
 			World Setting: ${JSON.stringify(setting)}.
-			Game character: ${JSON.stringify(gameCharacter)}
-			Enemy character: ${JSON.stringify(enemyCharacter)}
+			
+			Game character: ${JSON.stringify(gameCharacter)}.
+			Enemy character: ${JSON.stringify(enemyCharacter)}.
 
 			${opt('All previous events', oldEvents)}
-
+			
 			You have to generate an event for ${arena_game_description}.
 			
 			${opt('Game character action prompt', gameCharAction)}
@@ -127,10 +132,20 @@ export async function generateEvent(
 			Answer STRICTLY in this JSON format:
 			{
 				"visualPrompt": "Prompt for image generation ai, this MUST BE ON ENGLISH",
-				"description": "description of what the game character and his opponent did. And what happened after that, on ${m.lang()}",
+				"description": "Description in style that suits the world. What the game character did and how the enemy responded, on ${m.lang()}",
 			
-				gameCharacterHp: new adjusted enemy health,
-				enemyCharacterHp: new adjusted enemy health
+				"gameCharacterHp": new adjusted enemy health,
+				"enemyCharacterHp": new adjusted enemy health
+
+				// Write only if world or characters changed due to change of looks or events
+				// Be SURE to UPDATE VISUAL PROMPTS if it has changed. For example, a character 
+				// has changed clothes, or the world has become blood red.
+				// You can change anything, name, description, max_hp and other parameters
+				"update": {
+					"setting": {*},
+					"gameCharacter": {*},
+					"enemyCharacter": {*}
+				}
 			}
 		`)
 	);

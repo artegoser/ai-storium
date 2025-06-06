@@ -21,6 +21,12 @@
 
 	"game_char_action": "Действие игрового персонажа",
 
+	"setting_changed": "Сеттинг изменился",
+	"characters_changed": "Персонажи изменились",
+
+	"game_character_not_changed": "Игрвой персонаж не изменился",
+	"enemy_character_not_changed": "Противник не изменился",
+
 	"arena": "Арена",
 	"setting": "Сеттинг",
 	"characters": "Персонажи",

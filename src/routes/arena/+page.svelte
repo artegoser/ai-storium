@@ -23,6 +23,7 @@
 		getSettingNarration
 	} from '$lib/prompts';
 	import { type Character, type Event, type Setting } from '$lib/types';
+	import { calculateUpdated } from '$lib/utils';
 
 	let world_short: string = $state('');
 	let place_short: string = $state('');
@@ -55,7 +56,7 @@
 			<AiAudio prompt={getSettingNarration(setting)} autoplay={!passed_setting} />
 		{/if}
 
-		<div class="grid grid-cols-2 gap-2 max-sm:grid-cols-1">
+		<Split>
 			<div class="flex flex-col gap-2">
 				<Label name={m.world()} />
 				{#if !passed_setting}
@@ -76,7 +77,7 @@
 					<PlaceDisplay {setting} />
 				{/if}
 			</div>
-		</div>
+		</Split>
 
 		{#if !passed_setting}
 			<Button
@@ -179,15 +180,49 @@
 	{/if}
 
 	{#each events as event, i}
+		{@const timeline = events.slice(0, i + 1)}
+		{@const curr = calculateUpdated(setting!, gameCharacter!, enemyCharacter!, timeline)}
+
+		{#if event.update?.setting}
+			<Disc class="border-blue-600 bg-blue-900" name={m.setting_changed()} closed unlocked>
+				<Split>
+					<WorldDisplay setting={curr.setting} />
+					<PlaceDisplay setting={curr.setting} />
+				</Split>
+			</Disc>
+		{/if}
+
+		{#if event.update?.gameCharacter || event.update?.enemyCharacter}
+			<Disc class="border-green-600 bg-green-900" name={m.characters_changed()} closed unlocked>
+				<Split>
+					{#if event.update?.gameCharacter}
+						<CharDisplay char={curr.gameCharacter} />
+					{:else}
+						<div>
+							{m.game_character_not_changed()}
+						</div>
+					{/if}
+
+					{#if event.update?.enemyCharacter}
+						<CharDisplay char={curr.enemyCharacter} />
+					{:else}
+						<div>
+							{m.enemy_character_not_changed()}
+						</div>
+					{/if}
+				</Split>
+			</Disc>
+		{/if}
+
 		<Disc class="border-red-600 bg-red-900" name="{m.round()} {i + 1}" unlocked>
 			<AiAudio
 				prompt={getEventNarration({
-					setting,
-					gameCharacter,
-					enemyCharacter,
-					events: events.slice(0, i + 1)
+					setting: curr.setting,
+					gameCharacter: curr.gameCharacter,
+					enemyCharacter: curr.enemyCharacter,
+					events: timeline
 				})}
-				autoplay
+				autoplay={events.length - 1 === i}
 			/>
 
 			<AiImage prompt={event.visualPrompt} className="w-full aspect-2/1" height={512} />
@@ -196,8 +231,8 @@
 			</div>
 
 			<OnlySplit>
-				<SmallCharDisplay char={gameCharacter!} hp={event.gameCharacterHp} />
-				<SmallCharDisplay char={enemyCharacter!} hp={event.enemyCharacterHp} />
+				<SmallCharDisplay char={curr.gameCharacter} hp={event.gameCharacterHp} />
+				<SmallCharDisplay char={curr.enemyCharacter} hp={event.enemyCharacterHp} />
 			</OnlySplit>
 		</Disc>
 	{/each}

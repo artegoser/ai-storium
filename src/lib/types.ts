@@ -1,14 +1,5 @@
 import { z } from 'zod';
 
-export const event = z.object({
-	visualPrompt: z.string(),
-	description: z.string(),
-
-	gameCharacterHp: z.number(),
-	enemyCharacterHp: z.number()
-});
-export type Event = z.infer<typeof event>;
-
 export type Character = z.infer<typeof character>;
 export const character = z.object({
 	name: z.string(),
@@ -34,3 +25,24 @@ export const setting = z.object({
 	placeVisualPrompt: z.string()
 });
 export type Setting = z.infer<typeof setting>;
+
+export const update = z
+	.object({
+		setting: setting.partial(),
+		gameCharacter: character.partial(),
+		enemyCharacter: character.partial()
+	})
+	.partial()
+	.optional();
+export type Update = z.infer<typeof update>;
+
+export const event = z.object({
+	visualPrompt: z.string(),
+	description: z.string(),
+
+	gameCharacterHp: z.number(),
+	enemyCharacterHp: z.number(),
+
+	update
+});
+export type Event = z.infer<typeof event>;

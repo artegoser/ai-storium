@@ -20,6 +20,12 @@
 
 	"game_char_action": "Game character action",
 
+	"setting_changed": "Setting changed",
+	"characters_changed": "Characters changed",
+
+	"game_character_not_changed": "The game character has not changed",
+	"enemy_character_not_changed": "Enemy character has not changed",
+
 	"arena": "Arena",
 	"setting": "Setting",
 	"characters": "Character",

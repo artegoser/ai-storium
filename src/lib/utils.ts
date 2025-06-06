@@ -1,6 +1,32 @@
 import { m } from './paraglide/messages';
 import { getText, type Message } from './pollinations';
 import { state } from './state.svelte';
+import type { Character, Event, Setting } from './types';
+
+export function calculateUpdated(
+	setting: Setting,
+	gameCharacter: Character,
+	enemyCharacter: Character,
+	events: Event[]
+) {
+	let newSetting = setting;
+	let newGameChar = gameCharacter;
+	let newEnemyChar = enemyCharacter;
+
+	for (const event of events) {
+		if (event.update) {
+			newSetting = { ...newSetting, ...event.update.setting };
+			newGameChar = { ...newGameChar, ...event.update.gameCharacter };
+			newEnemyChar = { ...newEnemyChar, ...event.update.enemyCharacter };
+		}
+	}
+
+	return {
+		setting: newSetting,
+		gameCharacter: newGameChar,
+		enemyCharacter: newEnemyChar
+	};
+}
 
 export function system(content: string): Message {
 	return {

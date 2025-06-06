@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { state } from '$lib/state.svelte';
+	import { slide } from 'svelte/transition';
 
 	export let onclick: () => any = () => {};
 	export let className: string = '';
@@ -9,5 +10,6 @@
 <button
 	class="button {state.generating ? ' animate-pulse ' : ''}{className}"
 	disabled={state.generating || disabled}
-	{onclick}><slot /></button
+	{onclick}
+	transition:slide><slot /></button
 >
