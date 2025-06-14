@@ -3,7 +3,7 @@
 @plugin '@tailwindcss/typography';
 
 body {
-	@apply bg-zinc-800 text-zinc-100;
+	@apply bg-zinc-800 break-words text-zinc-100;
 }
 
 .warning {
