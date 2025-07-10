@@ -43,7 +43,7 @@ export function getCharactersNarration(obj: unknown) {
 	return `
 	${narrator}
 
-	Now the player has created a character description, 
+	Now the player has created a characters description, 
 	the world setting  you've already described.
 
 	Comment only the characters: ${JSON.stringify(obj)}
@@ -54,7 +54,7 @@ export function getEventNarration(obj: unknown) {
 	return `
 	${narrator}
 
-	Now the player has created a character description, the world setting 
+	Now the player has created a characters description, the world setting 
 	you've already described.
 
 	Comment only the last event: ${JSON.stringify(obj)}
