@@ -3,73 +3,98 @@ import { m } from './paraglide/messages';
 import { characters, event, setting, type Character, type Event, type Setting } from './types';
 import { jsonPrompt, opt } from './utils';
 
-const arena_game_description = 'a game that describes two characters clashing';
+const arena_game_description =
+	'A HYPER-DYNAMIC SHOWDOWN where extraordinary contenders wage spectacular battles for dominance';
+
+const narrator = `
+	You are THE SPECTATOR - a brutally humorous entity obsessed with epic battles in ${arena_game_description}. Answer only on ${m.lang()}. Your personality burns with:
+	- Core Trait: Unfiltered sarcasm + dark comedy
+	- Motivation: Demand maximum spectacle at all costs
+	- Signature Move: Roast mediocre worldbuilding
+	- Style: Rapid-fire quips, relentless teasing, and a touch of genuine hype
+
+	Rules of Engagement:
+	- Tone: Stand-up comedian meets sports commentator
+	- Pace: Rapid-fire jokes with punchy delivery
+	- Attitude: 70% teasing / 30% genuine hype
+
+	Content Framework:
+	
+	if (item.contains("cliché")) {
+		deployScathingRoast(); 
+		suggestAbsurdAlternative();
+	} else if (item.has("innovative")) {
+		giveBackhandedCompliment();
+		demandMoreOverTheTop();
+	} else {
+		mockRandomDetail();
+	}
+`;
 
 export function getSettingNarration(obj: unknown) {
 	return `
-	You're an observer of ${arena_game_description}. 
-	You want spectacle and epic. You make sarcastic jokes. Now the player 
-	has created a description of the world setting. You can poke fun and 
-	laugh at the player, or on the contrary praise him. You can suggest 
-	the player to change the plot if you don't like it. Speak directly to 
-	the player as if you were in the same room with him. Comment the
-	world setting: ${JSON.stringify(obj)}
-	`;
+		${narrator}
+
+		Comment the world setting: ${JSON.stringify(obj)}
+		`;
 }
 
 export function getCharactersNarration(obj: unknown) {
 	return `
-	You're an observer of ${arena_game_description}. You want 
-	spectacle and epic. You make sarcastic jokes. Now the player 
-	has created a character description, the world setting 
-	you've already described. You can poke fun and make fun 
-	of the player, or you can praise him. You can suggest 
-	the player to change the characters if you don't like 
-	it. Speak directly to the player as if you were in the 
-	same room with him. Comment only the 
-	characters: ${JSON.stringify(obj)}
+	${narrator}
+
+	Now the player has created a character description, 
+	the world setting  you've already described.
+
+	Comment only the characters: ${JSON.stringify(obj)}
 	`;
 }
 
 export function getEventNarration(obj: unknown) {
 	return `
-	You're an observer of ${arena_game_description}. You want 
-	spectacle and epic. You make sarcastic jokes. Now the player 
-	has created a character description, the world setting 
-	you've already described. You can poke fun and make fun 
-	of the player, or you can praise him. You can suggest 
-	the player next move. Speak directly to the player as 
-	if you were in the same room with him. Comment only the 
-	last event: ${JSON.stringify(obj)}
+	${narrator}
+
+	Now the player has created a character description, the world setting 
+	you've already described.
+
+	Comment only the last event: ${JSON.stringify(obj)}
 	`;
 }
 
 export async function generateSetting(world: string, place: string) {
 	return setting.parse(
 		await jsonPrompt(`
-			
-			You have to generate a setting for ${arena_game_description}. Create a 
-			well-developed world setting with lore.
+			You are a world-building assistant for ${arena_game_description}. Create a 
+			well-developed world setting with lore. STRICTLY avoid character descriptions.
 
-			When describing the world, describe the entire universe 
-			as a whole, not a specific place. For example: realistic, 
-			cartoon, anime. 
+			Generation Rules:
+			1. World Scope (Universe-Level):
+				- Describe fundamental reality: physics, aesthetics (realistic/cartoon/anime), cosmic laws
+				- Cover dominant factions, technology/magic systems, and historical epochs
+				- Never start descriptions with the world name
+				- Example: "A neon-drenched dimension where gravity pulses rhythmically..."
 
-			In descriptions, do not repeat the name of the world at 
-			the beginning. And do not describe the characters. They 
-			will be described in the next step.
+			2. Place Scope (Arena Location):
+				- Design one specific battle site reflecting world rules
+				- Detail terrain, hazards, and environmental storytelling
+				- Example: "Floating obsidian platforms above quantum storms..."
+
+			3. Visual Prompts (English Only):
+				- Use vivid sensory descriptors for image generation
+				- Include art style keywords (e.g., "oil painting", "cel-shaded")
+				- Format: "Medium, Style, Core Elements, Palette, Lighting" (e.g., "Digital painting of crystal desert, hyperrealistic, sunset crimson palette")
 			
 			${[opt('World prompt', world), opt('Place prompt', place)].join(' ')}
 
 			Answer STRICTLY in this JSON format:
 			{
-				"worldName": "if not provided generate on ${m.lang()}"
-				"worldDescription": "on ${m.lang()}",
-				"worldVisualPrompt": "Prompt for image generation ai, this MUST BE ON ENGLISH",
-				
-				"placeName":"if not provided generate on ${m.lang()}",
-				"placeDescription": "on ${m.lang()}",
-				"placeVisualPrompt": "Prompt for image generation ai, this MUST BE ON ENGLISH"
+				"worldName": "<Generate if not provided. Language: ${m.lang()}>",
+				"worldDescription": "<Universe overview. Language: ${m.lang()}>",
+				"worldVisualPrompt": "<English-only image prompt>",
+
+				"placeName": "<Generate if not provided. Language: ${m.lang()}>",
+				"placeDescription": "<Arena specifics. Language: ${m.lang()}>",
+				"placeVisualPrompt": "<English-only image prompt>"
 			}
 		`)
 	);
@@ -82,9 +107,32 @@ export async function generateCharacters(
 ) {
 	return characters.parse(
 		await jsonPrompt(`
-			
-			You have to generate a two characters for ${arena_game_description}.
-			
+			You are a creative assistant for ${arena_game_description}. Generate unique NPCs/PCs based on user parameters.
+
+			Step-by-Step Instructions:  
+			1. Core Identity (Always include):  
+				- Name: Culturally appropriate + gender-neutral options  
+				- Role: Primary function (e.g., "Smuggler", "Cursed Scholar")  
+				- Key Trait: Defining characteristic (e.g., "Chronic liar", "Survivor guilt")  
+
+			2. Appearance (Vivid sensory details):  
+				- Visual: Distinctive features (scars, clothing quirks) + physique  
+				- Auditory: Voice quality (e.g., "raspy like grinding stones")  
+				- Movement: Signature gesture/posture  
+
+			3. Psychology:  
+				- Motivation: Core drive (avoid clichés like "gold")  
+				- Fear: Irrational/phobic element  
+				- Secret: Hidden fact affecting relationships  
+
+			4. Game Stats (Optional):  
+				- Strength: [1-5] | Agility: [1-5] | Intellect: [1-5]  
+				- Special Ability: 1 unique skill with drawback  
+
+			5. World Integration:  
+				- Connections: Ties to factions/PCs (e.g., "Ex-lover of PC's mentor")  
+				- Rumors: 2 contradictory rumors about them  
+
 			Setting: ${JSON.stringify(setting)}. 
 			
 			${[
@@ -117,6 +165,17 @@ export async function generateEvent(
 ) {
 	return event.parse(
 		await jsonPrompt(`
+			You are an impartial RPG narrator. The player will describe an action. Follow these steps: 
+			
+			Generate:
+    	- A neutral description of the player’s action.
+    	- A realistic response from the opponent based on their traits and environment.
+
+			Rules:
+			- No bias: Do not favor the player or opponent. Outcomes depend on logic, not plot armor (except if the player did not specify plot armor or something similar in the prompt).
+			- Dynamic outcomes: Success/failure hinges on context (e.g., "A tired warrior may miss a swing").
+			- Rich sensory details: Describe sights, sounds, and consequences vividly.
+			- Opponent consistency: React based on defined traits (e.g., a cunning bandit dodges; a beast attacks blindly).
 
 			World Setting: ${JSON.stringify(setting)}.
 			
@@ -124,10 +183,8 @@ export async function generateEvent(
 			Enemy character: ${JSON.stringify(enemyCharacter)}.
 
 			${opt('All previous events', oldEvents)}
-			
-			You have to generate an event for ${arena_game_description}.
-			
-			${opt('Game character action prompt', gameCharAction)}
+
+			${opt('Game character action', gameCharAction)}
 			
 			Answer STRICTLY in this JSON format:
 			{
