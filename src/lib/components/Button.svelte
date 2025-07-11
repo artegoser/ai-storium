@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { state } from '$lib/state.svelte';
-	import { slide } from 'svelte/transition';
 
 	export let onclick: () => any = () => {};
 	export let className: string = '';
