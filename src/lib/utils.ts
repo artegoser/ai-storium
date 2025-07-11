@@ -58,7 +58,7 @@ export async function jsonPrompt(prompt: string): Promise<unknown> {
 }
 
 export function opt(msg: string, description: unknown) {
-	return description ? `${msg}: ${JSON.stringify(description)}.` : '';
+	return description ? `${msg.toUpperCase()}: ${JSON.stringify(description)}.` : '';
 }
 
 export function cleanWhitespace(input: string): string {
