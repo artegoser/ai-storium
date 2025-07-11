@@ -10,6 +10,5 @@
 <button
 	class="button {state.generating ? ' animate-pulse ' : ''}{className}"
 	disabled={state.generating || disabled}
-	{onclick}
-	transition:slide><slot /></button
+	{onclick}><slot /></button
 >
